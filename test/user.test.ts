@@ -2,6 +2,7 @@ import supertest from "supertest";
 import { web } from "../src/application/web";
 import { logger } from "../src/application/logging";
 import { UserTest } from "./test.util";
+import bcrypt from "bcrypt";
 
 // cara running testnya 'npm test'
 
@@ -117,5 +118,73 @@ describe(`GET /api/users/current`, () => {
     logger.debug(response.body);
     expect(response.status).toBe(401);
     expect(response.body.errors).toBeDefined();
+  });
+});
+
+describe("PATCH /api/users/current", () => {
+  beforeEach(async () => {
+    await UserTest.create();
+  });
+
+  afterEach(async () => {
+    await UserTest.delete();
+  });
+
+  it("should reject update request if request is invalid", async () => {
+    const response = await supertest(web)
+      .patch("/api/user/current")
+      .set("X-API-TOKEN", "test")
+      .send({
+        password: "",
+        name: "",
+      });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("should reject update user if token is wrong", async () => {
+    const response = await supertest(web)
+      .patch("/api/user/current")
+      .set("X-API-TOKEN", "salah")
+      .send({
+        password: "benar",
+        name: "benar",
+      });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("should be able to update username", async () => {
+    const response = await supertest(web)
+      .patch("/api/user/current")
+      .set("X-API-TOKEN", "test")
+      .send({
+        password: "benar",
+        name: "benar",
+      });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.name).toBe("benar");
+  });
+
+  it("should be able to update password", async () => {
+    const response = await supertest(web)
+      .patch("/api/user/current")
+      .set("X-API-TOKEN", "test")
+      .send({
+        password: "benar",
+      });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+
+    // karena passwordnya di hashing dan kita tidak tau, query ke database
+    const user = await UserTest.get();
+    expect(await bcrypt.compare("benar", user.password)).toBe(true);
   });
 });

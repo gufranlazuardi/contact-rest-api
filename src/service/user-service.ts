@@ -4,6 +4,7 @@ import { ResponseError } from "../error/response-error";
 import {
   CreateUserRequest,
   LoginUserRequest,
+  UpdateUserRequest,
   UserResponse,
   toUserResponse,
 } from "../model/user-model";
@@ -81,5 +82,30 @@ export class UserService {
   // karena ini sudah login dan mau kembalikan data usernya
   static async get(user: User): Promise<UserResponse> {
     return toUserResponse(user);
+  }
+
+  // update user // karena harus ada user yang login, maka user: User
+  static async update(
+    user: User,
+    request: UpdateUserRequest
+  ): Promise<UserResponse> {
+    const updateRequest = Validation.validate(UserValidation.UPDATE, request);
+
+    if (updateRequest.name) {
+      user.name = updateRequest.name;
+    }
+
+    if (updateRequest.password) {
+      user.password = await becrypt.hash(updateRequest.password, 10);
+    }
+
+    const result = await prismaClient.user.update({
+      where: {
+        username: user.username,
+      },
+      data: user,
+    });
+
+    return toUserResponse(result);
   }
 }
