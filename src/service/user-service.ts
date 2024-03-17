@@ -1,3 +1,4 @@
+import { User } from "@prisma/client";
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
 import {
@@ -75,5 +76,10 @@ export class UserService {
     response.token = user.token!;
     // paksa pake "!" karena tau pasti tidak nul
     return response;
+  }
+
+  // karena ini sudah login dan mau kembalikan data usernya
+  static async get(user: User): Promise<UserResponse> {
+    return toUserResponse(user);
   }
 }

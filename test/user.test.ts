@@ -3,6 +3,8 @@ import { web } from "../src/application/web";
 import { logger } from "../src/application/logging";
 import { UserTest } from "./test.util";
 
+// cara running testnya 'npm test'
+
 describe("POST /api/users", () => {
   afterEach(async () => {
     await UserTest.delete();
@@ -76,6 +78,41 @@ describe("POST /api/users/login", () => {
       username: "test",
       password: "salah",
     });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
+});
+
+describe(`GET /api/users/current`, () => {
+  // seperti biasa diawal bikin usernya dan diakhiri dengan dihapus
+  beforeEach(async () => {
+    await UserTest.create();
+  });
+
+  afterEach(async () => {
+    await UserTest.delete();
+  });
+
+  // bikin dua skenario, ketika bisa dan tidak bisa
+  // ini yang bisa
+  it("should be able to get user", async () => {
+    const response = await supertest(web)
+      .get("/api/users/current")
+      .set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.username).toBe("test");
+    expect(response.body.data.name).toBe("test");
+  });
+
+  // ini yang gabisa (tokennya salah)
+  it("should reject get user if token is invalid", async () => {
+    const response = await supertest(web)
+      .get("/api/users/current")
+      .set("X-API-TOKEN", "test");
 
     logger.debug(response.body);
     expect(response.status).toBe(401);
