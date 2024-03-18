@@ -5,6 +5,7 @@ import { UserTest } from "./test.util";
 import bcrypt from "bcrypt";
 
 // cara running testnya 'npm test'
+// mulai contact dst belom di testing
 
 describe("POST /api/users", () => {
   afterEach(async () => {
