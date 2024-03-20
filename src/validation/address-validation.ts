@@ -11,4 +11,10 @@ export class AddressValidation {
     country: z.string().min(1).max(100),
     postal_code: z.string().min(1).max(100),
   });
+
+  static readonly GET: ZodType = z.object({
+    // harus ngirim contactId nya siapa
+    contact_id: z.number().positive(),
+    id: z.number().positive(),
+  });
 }

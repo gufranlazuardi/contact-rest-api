@@ -2,6 +2,7 @@ import express from "express";
 import { authMiddleware } from "../middleware/auth-middleware";
 import { UserController } from "../controller/user-controller";
 import { ContactController } from "../controller/contact-controller";
+import { AddressController } from "../controller/address-controller";
 
 // khusus yang sudah login, dia pake apiRouter ini
 export const apiRouter = express.Router();
@@ -22,5 +23,7 @@ apiRouter.get("/api/contacts", ContactController.search); // Search Contact
 // Address API
 apiRouter.post(
   "/api/contacts/:contactId(\\d+)/addresses)",
-  ContactController.create
+  AddressController.create
 ); // Create Address
+apiRouter.get("/api/contacts/:contactId(\\d+)/addresses/:addressId(\\d+)"),
+  AddressController.get; // Get Address

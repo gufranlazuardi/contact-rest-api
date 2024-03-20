@@ -18,6 +18,11 @@ export type CreateAddressRequest = {
   postal_code: string;
 };
 
+export type GetAddressRequest = {
+  contactId: number;
+  id: number;
+};
+
 // konversi dari address prisma ke address response
 export function toAddressResponse(address: Address): AddressResponse {
   return {
