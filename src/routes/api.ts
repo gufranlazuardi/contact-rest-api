@@ -16,3 +16,5 @@ apiRouter.delete("/api/users/current", UserController.logout); // Logout User
 apiRouter.post("/api/contacts", ContactController.create); // Create Contact
 apiRouter.get("/api/contacts/:contactId(\\d+)", ContactController.get); // Get Contact // contactId pake regex biar semua contact idnya number
 apiRouter.put("/api/contacts/:contactId(\\d+)", ContactController.update); // Update Contact
+apiRouter.delete("/api/contacts/:contactId(\\d+)", ContactController.remove); // Remove Contact
+apiRouter.get("/api/contacts", ContactController.search); // Search Contact
