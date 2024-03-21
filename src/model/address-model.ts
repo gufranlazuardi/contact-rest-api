@@ -33,6 +33,9 @@ export type GetAddressRequest = {
   id: number;
 };
 
+// karena hampir sama dengan get address
+export type RemoveAddressRequest = GetAddressRequest;
+
 // konversi dari address prisma ke address response
 export function toAddressResponse(address: Address): AddressResponse {
   return {
