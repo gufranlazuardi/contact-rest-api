@@ -25,3 +25,4 @@ apiRouter.post("/api/contacts/:contactId(\\d+)/addresses)", AddressController.cr
 apiRouter.get("/api/contacts/:contactId(\\d+)/addresses/:addressId(\\d+)"), AddressController.get; // Get Address
 apiRouter.put("/api/contacts/:contactId(\\d+)/addresses/:addressId(\\d+)"), AddressController.update; // Update Address
 apiRouter.delete("/api/contacts/:contactId(\\d+)/addresses/:addressId(\\d+)"), AddressController.remove; // Remove Address
+apiRouter.get("/api/contacts/:contactId(\\d+)/addresses"), AddressController.list; // List Address
